@@ -62,16 +62,35 @@ class PostController extends Controller
         return redirect('/posts');
 
     }
+      public  function imageUpload(){
+
+        dd(request()->all());
+
+      }
 
     //编辑文章
-    public function edit(){
+    public function edit(Post $post){
 
-        return view('posts/edit');
+        return view('posts/edit',compact('post'));
     }
 
     //编辑逻辑
-    public function update(){
+    public function update(Request $request){
 
+        //验证
+        $this->validate($request,[
+            'title' => 'required|string|max:100|min:5',
+            'content' => 'required|string|min:10',
+        ]);
+
+        //逻辑
+        $post = new Post();
+        $post->title = request('title');
+        $post->content = request('content');
+        $post->save();
+
+        //渲染
+        return redirect("/posts/{$post->id}");
     }
 
     //删除逻辑
