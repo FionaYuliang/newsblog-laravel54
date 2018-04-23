@@ -41,9 +41,12 @@ Route::get('/posts/create','\App\Http\Controllers\PostController@create');
 Route::get('/posts/image/upload','\App\Http\Controllers\PostController@imageUpload');
 //创建逻辑
 Route::post('/posts/ajaxCreate','\App\Http\Controllers\PostController@store');
+//提交评论
+Route::post('/posts/ajaxComment','\App\Http\Controllers\PostController@comment');
 
 //删除文章
 Route::get('/posts/delete','\App\Http\Controllers\PostController@delete');
+
 
 //编辑文章
 Route::get('/posts/{post}/edit','\App\Http\Controllers\PostController@edit');
@@ -52,3 +55,4 @@ Route::post('/posts/{post}','\App\Http\Controllers\PostController@update');
 
 //文章详情页
 Route::get('/posts/{post}','\App\Http\Controllers\PostController@show');
+

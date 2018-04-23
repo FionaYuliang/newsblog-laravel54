@@ -1,23 +1,24 @@
 @extends("layout.main")
 
 @section('content')
- <div class="col-sm-8 blog-main">
+    <div class="col-sm-8 blog-main">
         <div class="blog-post">
             <div style="display: inline-flex">
                 <h2 class="blog-post-title">{{$post->title}}</h2>
-              @can('update',$post)
-                <a style="margin:auto" href="/posts/{{$post->id}}/edit">
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                </a>
+                @can('update',$post)
+                    <a style="margin:auto" href="/posts/{{$post->id}}/edit">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </a>
                 @endcan
                 @can('delete',$post)
-                <a style="margin:auto" href="/posts/{{$post->id}}/delete">
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                </a>
+                    <a style="margin:auto" href="/posts/{{$post->id}}/delete">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </a>
                 @endcan
             </div>
 
-            <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}}by <a href="#">{{$post->user->name}}</a></p>
+            <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}}by <a
+                        href="#">{{$post->user->name}}</a></p>
 
             {!!$post->content!!}
 
@@ -25,30 +26,56 @@
                 <a href="/posts/{{$post->id}}/praise" type="button" class="btn btn-primary btn-sm">赞</a>
             </div>
 
-        <br/>
-        <br/>
-        <br/>
+            <br/>
+            <br/>
+            <br/>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">评论</div>
-           <ul class="list-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">评论</div>
+                <ul class="list-group">
+                    @foreach($post->comments as $comment)
+                    <li class="list-group-item">
+                        <h5><strong>{{$comment->created_at}}</strong>  by <strong>{{$comment->user->name}}</strong></h5>
+                         <div>
+                             {{$comment->content}}
+                         </div>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
 
-           </ul>
-        </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">发表评论</div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">发表评论</div>
-            <div class="panel-body">
-                <form>
-                <textarea>
+                <ul class="list-group">
+                    <div>
+                        <input value="{{$post->id}}" type="hidden" id="post_id">
+                        <li class="list-group-item">
+                            <textarea name="comment" class="form-control" rows="10"></textarea>
+                            <br/>
+                            <button id="submit" class="btn btn-default" type="submit">提交</button>
+                        </li>
+                    </div>
+                </ul>
 
-                </textarea>
-                    <br/>
-                    <button class="btn btn-primary" type="submit" name="提交">提交</button>
-                </form>
             </div>
         </div>
     </div>
-    </div>
+
+@endsection
+
+@section('script')
+    <script>
+      $('#submit').on('click', function (ev) {
+        let comment = $('textarea[name="comment"]').val()
+        let post_id = $('input[id="post_id"]').val()
+
+        $.post('/posts/ajaxComment', {post_id,comment}, function (res) {
+          alert('评论成功!')
+          location.reload();
+        })
+        return false
+      })
+    </script>
 
 @endsection

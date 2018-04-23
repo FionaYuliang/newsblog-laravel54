@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Post;
-
+use App\Comment;
+// use App\Http\Controllers\LoginController;
 
 class PostController extends Controller
 {
@@ -25,8 +26,8 @@ class PostController extends Controller
 
     //文章详情页
     public function show(Post $post){
-
-
+        //预先加载comments,这样Views层不做数据查询,只做渲染
+        $post->load('comments');
         return view('posts/show',compact('post'));
     }
 
@@ -63,7 +64,6 @@ class PostController extends Controller
 //          $param = array_merge(request(['title','content']),compact('user_id'));
 //          $param->save();
 
-          return [234];
         //渲染
         return redirect('/posts');
 
@@ -105,4 +105,22 @@ class PostController extends Controller
     public function delete(Post $post){
         $this->authorize('delete',$post);
     }
+
+    //提交评论
+    public function comment(Post $post){
+
+        $this->validate(request(),[
+                'comment'=> 'required|min:3',
+        ]);
+
+        $comment = new Comment();
+        $comment->user_id = \Auth::id();
+        $comment->content = request('comment');
+        $comment->post_id = request('post_id');
+        $comment->save();
+
+        //return back();
+    }
+
+
 }

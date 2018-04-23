@@ -20,7 +20,6 @@ class Post extends Model
          return $this->belongsTo('App\User');
      }
 
-
      //一个文章下有很多评论
      public function comments(){
          return $this->hasMany('App\Comment')->orderBy('created_at','desc');
