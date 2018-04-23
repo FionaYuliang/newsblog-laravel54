@@ -16,6 +16,7 @@ class PostController extends Controller
             ->join('users','users.id','=','posts.user_id')
             ->select('users.id as uid','users.name as user_name','posts.id','posts.title','posts.content','posts.created_at')
             ->orderby('posts.created_at','desc')
+            ->withCount("comments")
             ->paginate(6);
 
         return view('posts/index', compact('posts'));
@@ -26,8 +27,10 @@ class PostController extends Controller
 
     //文章详情页
     public function show(Post $post){
+
         //预先加载comments,这样Views层不做数据查询,只做渲染
         $post->load('comments');
+
         return view('posts/show',compact('post'));
     }
 
@@ -117,6 +120,7 @@ class PostController extends Controller
         $comment->user_id = \Auth::id();
         $comment->content = request('comment');
         $comment->post_id = request('post_id');
+        //插入数据不需要模型关联!
         $comment->save();
 
         //return back();
