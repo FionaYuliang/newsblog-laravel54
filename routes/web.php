@@ -40,7 +40,7 @@ Route::get('/posts/create','\App\Http\Controllers\PostController@create');
 //上传图片
 Route::get('/posts/image/upload','\App\Http\Controllers\PostController@imageUpload');
 //创建逻辑
-Route::post('/posts','\App\Http\Controllers\PostController@store');
+Route::post('/posts/ajaxCreate','\App\Http\Controllers\PostController@store');
 
 //删除文章
 Route::get('/posts/delete','\App\Http\Controllers\PostController@delete');

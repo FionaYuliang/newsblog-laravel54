@@ -12,4 +12,17 @@ class Post extends Model
 
    //  protected $guarded;
      protected $fillable = ['title','content'];
+
+
+     //文章关联用户,使用模型关联-belongsto
+     public function user(){
+
+         return $this->belongsTo('App\User');
+     }
+
+
+     //一个文章下有很多评论
+     public function comments(){
+         return $this->hasMany('App\Comment')->orderBy('created_at','desc');
+     }
 }

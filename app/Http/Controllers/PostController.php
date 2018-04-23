@@ -12,8 +12,9 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::query()
-            ->select('id','title','content','created_at')
-            ->orderby('created_at','desc')
+            ->join('users','users.id','=','posts.user_id')
+            ->select('users.id as uid','users.name as user_name','posts.id','posts.title','posts.content','posts.created_at')
+            ->orderby('posts.created_at','desc')
             ->paginate(6);
 
         return view('posts/index', compact('posts'));
@@ -54,10 +55,15 @@ class PostController extends Controller
 
         //逻辑
           $post = new Post();
+          $user_id = \Auth::id();
           $post->title = request('title');
           $post->content = request('content');
-          $post->save();
+          $post->user_id = $user_id;
+        $post->save();
+//          $param = array_merge(request(['title','content']),compact('user_id'));
+//          $param->save();
 
+          return [234];
         //渲染
         return redirect('/posts');
 
@@ -75,13 +81,15 @@ class PostController extends Controller
     }
 
     //编辑逻辑
-    public function update(Request $request){
+    public function update(Post $post){
 
         //验证
         $this->validate($request,[
             'title' => 'required|string|max:100|min:5',
             'content' => 'required|string|min:10',
         ]);
+
+        $this->authorize('update',$post);
 
         //逻辑
         $post = new Post();
@@ -94,7 +102,7 @@ class PostController extends Controller
     }
 
     //删除逻辑
-    public function delete(){
-
+    public function delete(Post $post){
+        $this->authorize('delete',$post);
     }
 }

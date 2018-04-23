@@ -12,8 +12,7 @@
     </style>
 
     <div class="col-sm-8 blog-main">
-        <form action="/posts" method="POST">
-             {{csrf_field()}}
+        <div>
             <div class="form-group">
                 <label>标题</label>
                 <input name="title" type="text" class="form-control" placeholder="这里是标题">
@@ -32,14 +31,18 @@
                     </div>
                 </div>
             @include('layout.error')
-            <button id="submit" type="submit" class="btn btn-info">提交</button>
+            <button id="submit"  class="btn btn-info">提交</button>
+        </div>
 
-        </form>
 
         <br>
     </div>
 
 
+
+@endsection
+
+@section('script')
     <script type="text/javascript" src="/js/wangEditor.js"></script>
     <script type="text/javascript">
         var E = window.wangEditor
@@ -47,19 +50,24 @@
         // 或者 var editor = new E( document.getElementById('editor') )
         editor.customConfig.uploadImgServer = '/posts/image/upload'
 
-        editor.customConfig.uploadImgHeaders = {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-
         editor.create()
 
         document.getElementById('submit').addEventListener('click', function (ev) {
-            alert(editor.txt.text())
-            },false)
+            var content = editor.txt.html()
+            var title = $("input[name='title']").val()
+
+            console.log('content=>', content);
+            console.log(2);
+            console.log(2);
+
+            $.post('/posts/ajaxCreate', {title:title,content:content},function (res) {
+                console.log('response =>',res)
+                alert('发表成功!')
+                window.location.href='/posts'
+            })
 
 
+        },false)
 
     </script>
-
-
 @endsection
