@@ -23,8 +23,13 @@
             {!!$post->content!!}
 
             <div>
-                <a href="/posts/{{$post->id}}/praise" type="button" class="btn btn-primary btn-sm">赞</a>
+                @if($post->like(\Auth::id())->exists())
+                    <a href="/posts/{{$post->id}}/dislike" type="button" class="btn btn-default btn-sm">取消赞</a>
+                @else
+                    <a href="/posts/{{$post->id}}/like" type="button" class="btn btn-primary btn-sm">赞</a>
+                @endif
             </div>
+
 
             <br/>
             <br/>
@@ -35,7 +40,7 @@
                 <ul class="list-group">
                     @foreach($post->comments as $comment)
                     <li class="list-group-item">
-                        <h5><strong>{{$comment->created_at}}</strong>  by <strong>{{$comment->user->name}}</strong></h5>
+                        <h5>用户 <i>{{$comment->user->name}}</i> 于 <i>{{$comment->created_at}}</i> 发表评论: </h5>
                          <div>
                              {{$comment->content}}
                          </div>
@@ -57,7 +62,6 @@
                         </li>
                     </div>
                 </ul>
-
             </div>
         </div>
     </div>

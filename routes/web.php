@@ -47,6 +47,12 @@ Route::post('/posts/ajaxComment','\App\Http\Controllers\PostController@comment')
 //删除文章
 Route::get('/posts/delete','\App\Http\Controllers\PostController@delete');
 
+//点赞
+Route::get('/posts/{post}/like','\App\Http\Controllers\PostController@like');
+
+
+//取消点赞
+Route::get('/posts/{post}/dislike','\App\Http\Controllers\PostController@dislike');
 
 //编辑文章
 Route::get('/posts/{post}/edit','\App\Http\Controllers\PostController@edit');

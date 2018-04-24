@@ -24,4 +24,16 @@ class Post extends Model
      public function comments(){
          return $this->hasMany('App\Comment')->orderBy('created_at','desc');
      }
+
+     //一篇文章对于某个用户是否有赞
+     public function like($user_id)
+     {
+         return $this->hasOne('\App\Like')->where('user_id',$user_id);
+     }
+
+     //
+     public function likes()
+     {
+       return $this->hasMany('\App\Like');
+     }
 }
